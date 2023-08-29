@@ -15,19 +15,24 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float m_maxDistanceFromPlayer;
     [SerializeField] private float m_scrollSpeed;
     [SerializeField] private Vector2 m_YRotationLimits;
-    
+
 
     private void Awake()
     {
         //currentPosArroundObject = new Vector2(0, -1);
     }
 
-    void Update()
+	private void FixedUpdate()
+	{
+		ReplaceCamBeforeObstructionFUpdate();
+	}
+
+	void Update()
     {
-        //TODO SÉPARÉ LES MOUVEMENT EN FONCTION
+		//TODO SÉPARÉ LES MOUVEMENT EN FONCTION
+		
 
-
-        m_currentAngleX = Input.GetAxis("Mouse X");
+		m_currentAngleX = Input.GetAxis("Mouse X");
         transform.RotateAround(m_lookAt.position, m_lookAt.transform.up, m_currentAngleX * m_rotationSpeedX * Time.deltaTime);
 
         m_currentAngleY = Input.GetAxis("Mouse Y");
@@ -43,7 +48,7 @@ public class CameraController : MonoBehaviour
         {
             transform.RotateAround(m_lookAt.position, transform.right, m_currentAngleY * m_rotationSpeedY * Time.deltaTime);
         }
-       
+
 
         //MOUSE SCROLL
         float mouseScroll = Input.mouseScrollDelta.y;
@@ -53,8 +58,31 @@ public class CameraController : MonoBehaviour
             || (mouseScroll < 0 && camDistance < m_maxDistanceFromPlayer))
         {
             transform.Translate(Vector3.forward * (mouseScroll * m_scrollSpeed));
-        }      
+        }
     }
+
+    private void ReplaceCamBeforeObstructionFUpdate()
+    {
+        int layerMask = 1 << 8;
+
+		RaycastHit hit;
+        var vecteurDiff = transform.position - m_lookAt.position;
+        var distance = vecteurDiff.magnitude;
+
+		if (Physics.Raycast(m_lookAt.position, vecteurDiff.normalized, out hit, distance, layerMask))
+        {
+            //There's an object between target and camera
+            Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.yellow);
+            Debug.Log("Did Hit");
+            transform.SetPositionAndRotation(hit.point, transform.rotation);
+        }
+        else
+        {
+			Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.white);
+			Debug.Log("No Hit");
+		}
+    }
+
 
     private float ClampAngle(float angle)
     {
@@ -65,23 +93,3 @@ public class CameraController : MonoBehaviour
         return angle;
     }
 }
-
-
-/*
-      m_currentAngleX = Input.GetAxis("Mouse X");
-        transform.RotateAround(m_lookAt.position, m_lookAt.transform.up, m_currentAngleX * m_rotationSpeedX * Time.deltaTime);
-
-        m_currentAngleY = Input.GetAxis("Mouse Y");
-       
-       
-        transform.RotateAround(m_lookAt.position, transform.right, m_currentAngleY * m_rotationSpeedY * Time.deltaTime);
-
-        float xRotationValue = transform.eulerAngles.x;
-        print(xRotationValue);
-
-        
-        xRotationValue = Mathf.Clamp(xRotationValue, m_clampingXRotationValue.x, m_clampingXRotationValue.y);
-
-        Vector3 clampedRotationEuler = new Vector3(xRotationValue, transform.eulerAngles.y, transform.eulerAngles.z);
-        transform.eulerAngles = clampedRotationEuler;
-*/
