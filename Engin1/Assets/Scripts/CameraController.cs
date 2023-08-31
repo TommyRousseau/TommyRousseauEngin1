@@ -29,7 +29,8 @@ public class CameraController : MonoBehaviour
 
 	void Update()
     {
-		//TODO SÉPARÉ LES MOUVEMENT EN FONCTION
+		//TODO - SÉPARÉ LES MOUVEMENT EN FONCTION
+        //Faire que la cam garde ça distance avant de se coler au mur et la remttre en placer lorsqu'il n'y a plus de mur.
 		
 
 		m_currentAngleX = Input.GetAxis("Mouse X");
@@ -73,13 +74,13 @@ public class CameraController : MonoBehaviour
         {
             //There's an object between target and camera
             Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.yellow);
-            Debug.Log("Did Hit");
+   
             transform.SetPositionAndRotation(hit.point, transform.rotation);
         }
         else
         {
 			Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.white);
-			Debug.Log("No Hit");
+			
 		}
     }
 
