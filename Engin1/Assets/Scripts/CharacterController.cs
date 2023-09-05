@@ -19,6 +19,7 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        /*
         var vectorOnFloor = Vector3.ProjectOnPlane(m_camera.transform.forward, Vector3.up);
         vectorOnFloor.Normalize();
 
@@ -35,6 +36,7 @@ public class CharacterController : MonoBehaviour
         }
     
         print(m_rb.velocity.magnitude);
+        */
     }
 }
 

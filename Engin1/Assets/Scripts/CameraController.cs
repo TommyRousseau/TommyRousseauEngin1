@@ -8,6 +8,8 @@ public class CameraController : MonoBehaviour
     //Vector2 currentPosArroundObject = Vector2.zero;
     private float m_currentAngleX = 0;
     private float m_currentAngleY = 0;
+    private float m_mouseScroll = 0;
+    private float xCamAngle = 0;
     [SerializeField] private Transform m_lookAt;
     [SerializeField] private float m_rotationSpeedX;
     [SerializeField] private float m_rotationSpeedY;
@@ -29,40 +31,90 @@ public class CameraController : MonoBehaviour
 
 	void Update()
     {
-		//TODO - SÉPARÉ LES MOUVEMENT EN FONCTION
+        //TODO
         //Faire que la cam garde ça distance avant de se coler au mur et la remttre en placer lorsqu'il n'y a plus de mur.
-		
 
+
+        //Horizontal camera rotation
 		m_currentAngleX = Input.GetAxis("Mouse X");
-        transform.RotateAround(m_lookAt.position, m_lookAt.transform.up, m_currentAngleX * m_rotationSpeedX * Time.deltaTime);
-
-        m_currentAngleY = Input.GetAxis("Mouse Y");
-
-        //Adjust rotation if angle is under 0
-        float xAngle = transform.eulerAngles.x;
-        xAngle = ClampAngle(xAngle);
-
-
-        //Rotate only if rotation is between limits
-        if (m_currentAngleY > 0 && xAngle < m_YRotationLimits.y
-            || (m_currentAngleY < 0 && xAngle > m_YRotationLimits.x))
+        if(m_currentAngleX !=0)
         {
-            transform.RotateAround(m_lookAt.position, transform.right, m_currentAngleY * m_rotationSpeedY * Time.deltaTime);
-        }
+            CamHorizontalAroundTarget();
+		}
+       
 
+        //Vertical camera rotataion
+        m_currentAngleY = - Input.GetAxis("Mouse Y");
 
-        //MOUSE SCROLL
-        float mouseScroll = Input.mouseScrollDelta.y;
-        float camDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
+		//Adjust rotation if camera vertical angle is under 0
+		xCamAngle = ClampAngle(transform.eulerAngles.x);
+		CorrectIfOverpassLimits();
 
-        if ((mouseScroll > 0 && camDistance > m_minDistanceFromPlayer)
-            || (mouseScroll < 0 && camDistance < m_maxDistanceFromPlayer))
-        {
-            transform.Translate(Vector3.forward * (mouseScroll * m_scrollSpeed));
-        }
+		if (m_currentAngleX != 0)
+		{
+			CamVerticalAroundTarget();
+		}
+
+		//MOUSE SCROLL
+		m_mouseScroll = Input.mouseScrollDelta.y;
+
+		if (m_mouseScroll != 0)
+		{
+			AdjustDistance();
+		}
+		
     }
 
-    private void ReplaceCamBeforeObstructionFUpdate()
+    private void CorrectIfOverpassLimits()
+    {
+		if (xCamAngle < m_YRotationLimits.x - 5)
+		{
+			transform.RotateAround(m_lookAt.position, transform.right, 0.1f * m_rotationSpeedY * Time.deltaTime);
+		}
+		if (xCamAngle > m_YRotationLimits.y + 5)
+		{
+			transform.RotateAround(m_lookAt.position, transform.right, -0.1f * m_rotationSpeedY * Time.deltaTime);
+		}
+	}
+    private void CamHorizontalAroundTarget()
+    {
+		transform.RotateAround(m_lookAt.position, m_lookAt.transform.up, m_currentAngleX * m_rotationSpeedX * Time.deltaTime);
+	}
+
+    private void CamVerticalAroundTarget()
+    {
+		//Adjust rotation if camera vertical angle is under 0
+		float xCamAngle = transform.eulerAngles.x;
+		xCamAngle = ClampAngle(xCamAngle);
+
+
+		//Rotate only if rotation is between limits
+		if (m_currentAngleY > 0 && xCamAngle < m_YRotationLimits.y
+			|| (m_currentAngleY < 0 && xCamAngle > m_YRotationLimits.x))
+		{
+			transform.RotateAround(m_lookAt.position, transform.right, m_currentAngleY * m_rotationSpeedY * Time.deltaTime);
+		}
+	}
+
+    private void AdjustDistance()
+    {
+
+	
+		var vectorOnFloor = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+		vectorOnFloor.Normalize();	
+		
+
+		float camDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
+
+
+		if ((m_mouseScroll > 0 && camDistance > m_minDistanceFromPlayer)
+			|| (m_mouseScroll < 0 && camDistance < m_maxDistanceFromPlayer))
+		{
+			transform.Translate(vectorOnFloor * (m_mouseScroll * m_scrollSpeed), Space.World);
+		}
+	}
+
+	private void ReplaceCamBeforeObstructionFUpdate()
     {
         int layerMask = 1 << 8;
 
