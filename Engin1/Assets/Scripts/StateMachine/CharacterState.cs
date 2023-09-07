@@ -2,32 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterState : IState
+public abstract class CharacterState : IState
 {
 	protected CharacterControllerStateMachine m_stateMachine;
+
+
 	public void OnStart(CharacterControllerStateMachine stateMachine)
 	{
 		m_stateMachine = stateMachine;
 	}
 
-	public void OnEnter()
+	public virtual void OnEnter()
 	{
-		throw new System.NotImplementedException();
+
 	}
 
-	public void OnExit()
+	public virtual void OnExit()
 	{
-		throw new System.NotImplementedException();
+
 	}
 
-	public void OnFixedUpdate()
+	public virtual void OnFixedUpdate()
 	{
-		throw new System.NotImplementedException();
+
 	}
 
-	public void OnUpdate()
+	public virtual void OnUpdate()
 	{
-		throw new System.NotImplementedException();
+
 	}
 
+    public virtual bool CanEnter()
+    {
+		return true;
+    }
+
+    public virtual bool CanExit()
+    {
+		return true;
+    }
 }

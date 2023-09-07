@@ -19,6 +19,15 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Vector2 m_YRotationLimits;
 
 
+    //GDD
+    //Hauter
+    //préparation
+    //Déplacemnt en air
+    //Conserver momentum
+
+
+
+
     private void Awake()
     {
         //currentPosArroundObject = new Vector2(0, -1);
