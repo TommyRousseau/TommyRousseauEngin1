@@ -9,7 +9,8 @@ public class CameraController : MonoBehaviour
     private float m_currentAngleX = 0;
     private float m_currentAngleY = 0;
     private float m_mouseScroll = 0;
-    private float xCamAngle = 0;
+    private float m_xCamAngle = 0;
+    private float m_playerRegistredDistance = 0;
     [SerializeField] private Transform m_lookAt;
     [SerializeField] private float m_rotationSpeedX;
     [SerializeField] private float m_rotationSpeedY;
@@ -30,7 +31,8 @@ public class CameraController : MonoBehaviour
 
     private void Awake()
     {
-        //currentPosArroundObject = new Vector2(0, -1);
+        //Get the default distance of the camera
+        m_playerRegistredDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
     }
 
 	private void FixedUpdate()
@@ -40,9 +42,6 @@ public class CameraController : MonoBehaviour
 
 	void Update()
     {
-        //TODO
-        //Faire que la cam garde ça distance avant de se coler au mur et la remttre en placer lorsqu'il n'y a plus de mur.
-
 
         //Horizontal camera rotation
 		m_currentAngleX = Input.GetAxis("Mouse X");
@@ -55,8 +54,8 @@ public class CameraController : MonoBehaviour
         //Vertical camera rotataion
         m_currentAngleY = - Input.GetAxis("Mouse Y");
 
-		//Adjust rotation if camera vertical angle is under 0
-		xCamAngle = ClampAngle(transform.eulerAngles.x);
+        //Adjust rotation if camera vertical angle is under 0
+        m_xCamAngle = ClampAngle(transform.eulerAngles.x);
 		CorrectIfOverpassLimits();
 
 		if (m_currentAngleX != 0)
@@ -76,11 +75,11 @@ public class CameraController : MonoBehaviour
 
     private void CorrectIfOverpassLimits()
     {
-		if (xCamAngle < m_YRotationLimits.x - 5)
+		if (m_xCamAngle < m_YRotationLimits.x - 5)
 		{
 			transform.RotateAround(m_lookAt.position, transform.right, 0.1f * m_rotationSpeedY * Time.deltaTime);
 		}
-		if (xCamAngle > m_YRotationLimits.y + 5)
+		if (m_xCamAngle > m_YRotationLimits.y + 5)
 		{
 			transform.RotateAround(m_lookAt.position, transform.right, -0.1f * m_rotationSpeedY * Time.deltaTime);
 		}
@@ -108,41 +107,66 @@ public class CameraController : MonoBehaviour
     private void AdjustDistance()
     {
 
-	
-		var vectorOnFloor = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
-		vectorOnFloor.Normalize();	
-		
 
-		float camDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
+        /* // For world z movement
+            var vectorOnFloor = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+            vectorOnFloor.Normalize();	
+        */
 
+       // float camDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
+       
+   
 
-		if ((m_mouseScroll > 0 && camDistance > m_minDistanceFromPlayer)
-			|| (m_mouseScroll < 0 && camDistance < m_maxDistanceFromPlayer))
+		if ((m_mouseScroll > 0 && m_playerRegistredDistance > m_minDistanceFromPlayer)
+			|| (m_mouseScroll < 0 && m_playerRegistredDistance < m_maxDistanceFromPlayer))
 		{
-			transform.Translate(vectorOnFloor * (m_mouseScroll * m_scrollSpeed), Space.World);
-		}
+            //transform.Translate(vectorOnFloor * (m_mouseScroll * m_scrollSpeed), Space.World); //for world z movement
+            transform.Translate(Vector3.forward * (m_mouseScroll * m_scrollSpeed));
+            m_playerRegistredDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
+            // m_playerRegistredDistance = camDistance;
+        }
 	}
 
 	private void ReplaceCamBeforeObstructionFUpdate()
     {
+       
         int layerMask = 1 << 8;
 
 		RaycastHit hit;
         var vecteurDiff = transform.position - m_lookAt.position;
         var distance = vecteurDiff.magnitude;
+        bool needToReposition = false;
+        Vector3 newPos;
 
-		if (Physics.Raycast(m_lookAt.position, vecteurDiff.normalized, out hit, distance, layerMask))
+        if (Physics.Raycast(m_lookAt.position, vecteurDiff.normalized, out hit, m_playerRegistredDistance, layerMask))
         {
+            
             //There's an object between target and camera
             Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.yellow);
-   
+            //Replace the camera at the cast collision point
             transform.SetPositionAndRotation(hit.point, transform.rotation);
+
+            //The camera will need to be repositioned when no more obtruction
+            needToReposition = true;
+ 
         }
         else
         {
-			Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.white);
-			
-		}
+            
+            if(m_playerRegistredDistance != 0 && needToReposition)
+            {
+                newPos = transform.position - m_lookAt.position;
+                newPos.Normalize();
+                newPos *= m_playerRegistredDistance;
+
+                transform.SetPositionAndRotation(newPos, transform.rotation);
+                print("needToReposition FALSE");
+                needToReposition = false;
+            }
+
+            Debug.DrawRay(m_lookAt.position, vecteurDiff.normalized * hit.distance, Color.white);
+
+        }
     }
 
 

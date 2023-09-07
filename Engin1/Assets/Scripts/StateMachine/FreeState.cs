@@ -46,7 +46,8 @@ public class FreeState : CharacterState
     public override bool CanEnter()
     {
 		//Can enter only if touching ground
-		return true;	
+
+		return m_stateMachine.IsInContactWithFloor();	
     }
     public override bool CanExit()
     {

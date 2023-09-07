@@ -6,6 +6,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
 {
     public Camera Camera { get; private set; }
 	public Rigidbody Rb { get; private set; }
+    
 	[field:SerializeField] public float AccelerationValue { get; private set; }
 	[field: SerializeField] public float MaxVelocity { get; private set; }
     [field: SerializeField] public float JumpIntensity { get; private set; }
@@ -14,9 +15,9 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private CharacterState m_currentState;
 	private List<CharacterState> m_possibleStates;
+    [SerializeField] private CharacterFloorTrigger m_floorTrigger;
 
-
-	private void Awake()
+    private void Awake()
 	{
 		m_possibleStates = new List<CharacterState>();
 
@@ -80,6 +81,11 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 return;
             }
         }
+    }
+
+    public bool IsInContactWithFloor()
+    {
+        return m_floorTrigger.IsOnFloor;
     }
 }
 

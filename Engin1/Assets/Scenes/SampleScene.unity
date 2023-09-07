@@ -3411,6 +3411,7 @@ MonoBehaviour:
   <AccelerationValue>k__BackingField: 10
   <MaxVelocity>k__BackingField: 20
   <JumpIntensity>k__BackingField: 250
+  m_floorTrigger: {fileID: 1071821365}
 --- !u!4 &1136854481
 Transform:
   m_ObjectHideFlags: 0
