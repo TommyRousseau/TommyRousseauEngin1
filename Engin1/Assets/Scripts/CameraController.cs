@@ -21,7 +21,7 @@ public class CameraController : MonoBehaviour
 
 
     //GDD
-    //Hauter
+    //Hauteur
     //préparation
     //Déplacemnt en air
     //Conserver momentum
@@ -106,7 +106,8 @@ public class CameraController : MonoBehaviour
 
     private void AdjustDistance()
     {
-
+        //TODO
+        //Lerp quand scroll
 
         /* // For world z movement
             var vectorOnFloor = Vector3.ProjectOnPlane(transform.forward, Vector3.up);

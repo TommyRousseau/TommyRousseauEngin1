@@ -7,13 +7,16 @@ public class CharacterControllerStateMachine : MonoBehaviour
     public Camera Camera { get; private set; }
 	public Rigidbody Rb { get; private set; }
     
-	[field:SerializeField] public float AccelerationValue { get; private set; }
+	[field:SerializeField] public float ForwardAccelerationValue { get; private set; }
+	[field:SerializeField] public float SideAccelerationValue { get; private set; }
 	[field: SerializeField] public float MaxVelocity { get; private set; }
     [field: SerializeField] public float JumpIntensity { get; private set; }
+	[field: SerializeField] public float TimeOnGround { get; set; }
+	[field: SerializeField] public float TimeGettingUp { get; set; }
 
 
 
-    private CharacterState m_currentState;
+	private CharacterState m_currentState;
 	private List<CharacterState> m_possibleStates;
     [SerializeField] private CharacterFloorTrigger m_floorTrigger;
 
@@ -21,10 +24,14 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	{
 		m_possibleStates = new List<CharacterState>();
 
-		m_possibleStates.Add(new FreeState());
 		m_possibleStates.Add(new JumpState());
+		m_possibleStates.Add(new HitState());
+		m_possibleStates.Add(new OnGroundState());
+		m_possibleStates.Add(new GettingUpState());
+		m_possibleStates.Add(new AttackingState());
+		m_possibleStates.Add(new FreeState());
 
-        foreach (CharacterState state in m_possibleStates)
+		foreach (CharacterState state in m_possibleStates)
         {
             state.OnStart(this);
         }
@@ -90,6 +97,6 @@ public class CharacterControllerStateMachine : MonoBehaviour
 }
 
 //TODO
-//Appliquer les déplacement relati a la cam dans les 3 autre direction
+//Appliquer les déplacement relatif a la cam dans les 3 autre direction
 //Avec des vitesse de déplacement maximale différentes vers les cöté et vers l'arrière
 //Lorsqu'aucun input est mis, décélérer le personnage rapidement

@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class FreeState : CharacterState
 {
+	Vector3 vectorOnFloor = new Vector3();
 
-    public override void OnEnter()
+	public override void OnEnter()
 	{
 		Debug.Log("Enter state: FreeState\n");
 	}
@@ -18,15 +19,28 @@ public class FreeState : CharacterState
 
 	public override void OnFixedUpdate()
 	{
-		//m_currentState.OnUpdate();
-
-		var vectorOnFloor = Vector3.ProjectOnPlane(m_stateMachine.Camera.transform.forward, Vector3.up);
-		vectorOnFloor.Normalize();
-
-
+		
 		if (Input.GetKey(KeyCode.W))
 		{
-            m_stateMachine.Rb.AddForce(vectorOnFloor * m_stateMachine.AccelerationValue, ForceMode.Acceleration);
+			vectorOnFloor = GetVectorOnFloor(m_stateMachine.Camera.transform.forward);
+			m_stateMachine.Rb.AddForce(vectorOnFloor * m_stateMachine.ForwardAccelerationValue, ForceMode.Acceleration);
+		}
+		if (Input.GetKey(KeyCode.S))
+		{
+			vectorOnFloor = GetVectorOnFloor(-m_stateMachine.Camera.transform.forward);
+			m_stateMachine.Rb.AddForce(vectorOnFloor * m_stateMachine.ForwardAccelerationValue, ForceMode.Acceleration);
+		}
+
+		if (Input.GetKey(KeyCode.D))
+		{
+			vectorOnFloor = GetVectorOnFloor(m_stateMachine.Camera.transform.right);
+			m_stateMachine.Rb.AddForce(vectorOnFloor * m_stateMachine.SideAccelerationValue, ForceMode.Acceleration);
+		}
+
+		if (Input.GetKey(KeyCode.A))
+		{
+			vectorOnFloor = GetVectorOnFloor(-m_stateMachine.Camera.transform.right);
+			m_stateMachine.Rb.AddForce(vectorOnFloor * m_stateMachine.SideAccelerationValue, ForceMode.Acceleration);
 		}
 
 		if (m_stateMachine.Rb.velocity.magnitude > m_stateMachine.MaxVelocity)
@@ -35,7 +49,33 @@ public class FreeState : CharacterState
             m_stateMachine.Rb.velocity *= m_stateMachine.MaxVelocity;
 		}
 
+		/*
+		///GET DIRECTION ANGLE
+		//Add all dir vector
+		Vector3 dir = frontDir + rightDir;
+		//Normalize it
+		dir.Normalize();
+		//Find the angle
+		float angle = (Mathf.Asin(dir.y));
+		Debug.Log("angle: " + angle * Mathf.Rad2Deg);
+		//Vector3 result = Vector3.Add(testx, testy);
+
+		//Debug.Log("result: " + result);
+		*/
+
 		// print(Rb.velocity.magnitude);
+
+
+		/// SOLUTION !!!!!
+		//(Composnate en X / Taille de votre vectuer) * vitesse de déplacement latéral + (composante en Y / taille de votre vectuer) * vitesse de déplacement (avant/arrière)
+
+	}
+
+	public Vector3 GetVectorOnFloor(Vector3 dir)
+	{
+		Vector3 vecOnFloor = Vector3.ProjectOnPlane(dir, Vector3.up);
+		vectorOnFloor.Normalize();
+		return vecOnFloor;
 	}
 
 	public override void OnExit()
