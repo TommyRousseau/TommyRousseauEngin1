@@ -5,7 +5,8 @@ using UnityEngine;
 public class CharacterControllerStateMachine : MonoBehaviour
 {
     public Camera Camera { get; private set; }
-	public Rigidbody Rb { get; private set; }
+    [field: SerializeField] public Rigidbody Rb { get; private set; }
+    [field: SerializeField] public Animator Animator { get; private set; }
     
 	[field:SerializeField] public float ForwardAccelerationValue { get; private set; }
 	[field:SerializeField] public float SideAccelerationValue { get; private set; }
@@ -41,7 +42,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	void Start()
     {
         Camera = Camera.main;
-        Rb = GetComponent<Rigidbody>();
+       
 
        
 
@@ -49,6 +50,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
 		m_currentState.OnEnter();
 	}
 
+    private void UpdateAnimatorValues()
+    {
+
+    }
  
 
     private void FixedUpdate()
@@ -59,7 +64,11 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private void Update()
     {
-		m_currentState.OnUpdate();
+        //
+        UpdateAnimatorValues();
+        //
+
+        m_currentState.OnUpdate();
         TryStateTransition();
     }
 

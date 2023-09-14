@@ -22,7 +22,8 @@ public class FreeState : CharacterState
 		
 		if (Input.GetKey(KeyCode.W))
 		{
-			vectorOnFloor = GetVectorOnFloor(m_stateMachine.Camera.transform.forward);
+		
+            vectorOnFloor = GetVectorOnFloor(m_stateMachine.Camera.transform.forward);
 			m_stateMachine.Rb.AddForce(vectorOnFloor * m_stateMachine.ForwardAccelerationValue, ForceMode.Acceleration);
 		}
 		if (Input.GetKey(KeyCode.S))

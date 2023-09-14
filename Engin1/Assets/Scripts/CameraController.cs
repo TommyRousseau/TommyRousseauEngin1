@@ -70,6 +70,8 @@ public class CameraController : MonoBehaviour
 		{
 			AdjustDistance();
 		}
+
+
 		
     }
 
@@ -108,23 +110,12 @@ public class CameraController : MonoBehaviour
     {
         //TODO
         //Lerp quand scroll
-
-        /* // For world z movement
-            var vectorOnFloor = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
-            vectorOnFloor.Normalize();	
-        */
-
-       // float camDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
-       
-   
-
+ 
 		if ((m_mouseScroll > 0 && m_playerRegistredDistance > m_minDistanceFromPlayer)
 			|| (m_mouseScroll < 0 && m_playerRegistredDistance < m_maxDistanceFromPlayer))
 		{
-            //transform.Translate(vectorOnFloor * (m_mouseScroll * m_scrollSpeed), Space.World); //for world z movement
             transform.Translate(Vector3.forward * (m_mouseScroll * m_scrollSpeed));
             m_playerRegistredDistance = Vector3.Distance(transform.position, m_lookAt.transform.position);
-            // m_playerRegistredDistance = camDistance;
         }
 	}
 
