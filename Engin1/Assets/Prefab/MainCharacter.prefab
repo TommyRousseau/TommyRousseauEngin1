@@ -750,11 +750,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_lookAt: {fileID: 4380197156961273814}
-  m_rotationSpeedX: 100
-  m_rotationSpeedY: 60
+  m_rotationSpeedX: 200
+  m_rotationSpeedY: 120
   m_minDistanceFromPlayer: 4
-  m_maxDistanceFromPlayer: 15
-  m_scrollSpeed: 1
+  m_maxDistanceFromPlayer: 30
+  m_scrollSpeed: 8
+  m_scrollDistance: 5
   m_YRotationLimits: {x: -10, y: 60}
 --- !u!1183024399 &3842645998118267014
 LookAtConstraint:
@@ -4082,10 +4083,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Rb>k__BackingField: {fileID: 3684085902750287321}
   <Animator>k__BackingField: {fileID: 9069960292452179966}
-  <ForwardAccelerationValue>k__BackingField: 20
-  <SideAccelerationValue>k__BackingField: 20
-  <MaxVelocity>k__BackingField: 20
-  <JumpIntensity>k__BackingField: 250
+  <AccelerationValue>k__BackingField: 10
+  <ForwardMaxVelocity>k__BackingField: 20
+  <SideMaxVelocity>k__BackingField: 10
+  <BackMaxVelocity>k__BackingField: 5
+  <JumpIntensity>k__BackingField: 325
   <TimeOnGround>k__BackingField: 2
   <TimeGettingUp>k__BackingField: 0.5
   m_floorTrigger: {fileID: 6808043264930078209}

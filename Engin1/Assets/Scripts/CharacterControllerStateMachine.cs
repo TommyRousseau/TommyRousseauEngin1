@@ -4,13 +4,16 @@ using UnityEngine;
 
 public class CharacterControllerStateMachine : MonoBehaviour
 {
-    public Camera Camera { get; private set; }
+    public float speed;
+	[SerializeField] public Animator m_animator;
+	public Camera Camera { get; private set; }
     [field: SerializeField] public Rigidbody Rb { get; private set; }
     [field: SerializeField] public Animator Animator { get; private set; }
     
-	[field:SerializeField] public float ForwardAccelerationValue { get; private set; }
-	[field:SerializeField] public float SideAccelerationValue { get; private set; }
-	[field: SerializeField] public float MaxVelocity { get; private set; }
+	[field:SerializeField] public float AccelerationValue { get; private set; }
+	[field: SerializeField] public float ForwardMaxVelocity { get; private set; }
+	[field: SerializeField] public float SideMaxVelocity { get; private set; }
+	[field: SerializeField] public float BackMaxVelocity { get; private set; }
     [field: SerializeField] public float JumpIntensity { get; private set; }
 	[field: SerializeField] public float TimeOnGround { get; set; }
 	[field: SerializeField] public float TimeGettingUp { get; set; }
@@ -46,14 +49,16 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
        
 
-		m_currentState = m_possibleStates[0];
+		m_currentState = m_possibleStates[m_possibleStates.Count-1];
 		m_currentState.OnEnter();
 	}
 
     private void UpdateAnimatorValues()
     {
 
-    }
+        m_animator.SetBool("TouchGround", IsInContactWithFloor());
+
+	}
  
 
     private void FixedUpdate()
@@ -64,8 +69,9 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private void Update()
     {
-        //
-        UpdateAnimatorValues();
+        speed = Rb.velocity.magnitude;
+		//
+		UpdateAnimatorValues();
         //
 
         m_currentState.OnUpdate();
