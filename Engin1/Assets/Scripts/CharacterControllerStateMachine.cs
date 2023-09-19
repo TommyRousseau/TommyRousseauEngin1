@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class CharacterControllerStateMachine : MonoBehaviour
 {
-    public float speed;
 	[SerializeField] public Animator m_animator;
 	public Camera Camera { get; private set; }
     [field: SerializeField] public Rigidbody Rb { get; private set; }
     [field: SerializeField] public Animator Animator { get; private set; }
     
 	[field:SerializeField] public float AccelerationValue { get; private set; }
+	[field:SerializeField] public float StopSpeed { get; private set; }
 	[field: SerializeField] public float ForwardMaxVelocity { get; private set; }
 	[field: SerializeField] public float SideMaxVelocity { get; private set; }
 	[field: SerializeField] public float BackMaxVelocity { get; private set; }
@@ -69,10 +69,10 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
     private void Update()
     {
-        speed = Rb.velocity.magnitude;
-		//
+ 
+	
 		UpdateAnimatorValues();
-        //
+     
 
         m_currentState.OnUpdate();
         TryStateTransition();
@@ -93,7 +93,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
                 continue;
             }
 
-            if (state.CanEnter())
+            if (state.CanEnter(m_currentState))
             {
                 //Quitter le state actuel
                 m_currentState.OnExit();

@@ -26,7 +26,7 @@ public class AttackingState : CharacterState
 		Debug.Log("Exit state: Attacking\n");
 	}
 
-	public override bool CanEnter()
+	public override bool CanEnter(CharacterState currentState)
 	{
 
 		return Input.GetMouseButtonDown(0);

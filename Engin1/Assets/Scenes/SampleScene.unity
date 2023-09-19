@@ -15937,6 +15937,11 @@ PrefabInstance:
       propertyPath: m_animator
       value: 
       objectReference: {fileID: 380616962}
+    - target: {fileID: 4748762523463946204, guid: c24f6a949cc1c78439f8c17edf8e432b,
+        type: 3}
+      propertyPath: <StopSpeed>k__BackingField
+      value: 4
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

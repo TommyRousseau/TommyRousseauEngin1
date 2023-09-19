@@ -27,7 +27,7 @@ public class HitState : CharacterState
 		Debug.Log("Exit state: HitState\n");
 	}
 
-	public override bool CanEnter()
+	public override bool CanEnter(CharacterState currentState)
 	{
 
 		return Input.GetKeyDown(KeyCode.H);

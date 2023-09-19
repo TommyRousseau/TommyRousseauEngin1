@@ -29,7 +29,7 @@ public class GettingUpState : CharacterState
 		m_stateMachine.TimeGettingUp = m_defaultTimeInThisState;
 	}
 
-	public override bool CanEnter()
+	public override bool CanEnter(CharacterState currentState)
 	{
 		return m_stateMachine.TimeOnGround <= 0;
 	}

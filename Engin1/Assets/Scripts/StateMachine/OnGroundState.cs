@@ -30,7 +30,7 @@ public class OnGroundState : CharacterState
 		m_stateMachine.TimeOnGround = m_defaultTimeInThisState;
 	}
 
-	public override bool CanEnter()
+	public override bool CanEnter(CharacterState currentState)
 	{
 		return Input.GetKeyDown(KeyCode.G);
 		

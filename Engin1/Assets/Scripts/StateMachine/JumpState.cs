@@ -117,7 +117,7 @@ public class JumpState : CharacterState
         Debug.Log("Exit state: JumpState\n");
     }
 
-    public override bool CanEnter()
+    public override bool CanEnter(CharacterState currentState)
     {
         return Input.GetKeyDown(KeyCode.Space);
     }
