@@ -4081,15 +4081,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8fbaf0081cc630e449088b9127a82b65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_animator: {fileID: 9069960292452179966}
   <Rb>k__BackingField: {fileID: 3684085902750287321}
   <Animator>k__BackingField: {fileID: 9069960292452179966}
-  <AccelerationValue>k__BackingField: 10
+  <HitDetector>k__BackingField: {fileID: 3048424156399773238}
+  <AccelerationValue>k__BackingField: 15
+  <StopSpeed>k__BackingField: 4
   <ForwardMaxVelocity>k__BackingField: 20
   <SideMaxVelocity>k__BackingField: 10
   <BackMaxVelocity>k__BackingField: 5
   <JumpIntensity>k__BackingField: 325
   <TimeOnGround>k__BackingField: 2
   <TimeGettingUp>k__BackingField: 0.5
+  <HitTime>k__BackingField: 0.5
+  <AttackTime>k__BackingField: 0.5
   m_floorTrigger: {fileID: 6808043264930078209}
 --- !u!1 &2783969518105429537
 GameObject:
@@ -4382,6 +4387,7 @@ GameObject:
   - component: {fileID: 4380197156961273814}
   - component: {fileID: 582593399801626556}
   - component: {fileID: 3684085902750287321}
+  - component: {fileID: 3048424156399773238}
   m_Layer: 6
   m_Name: MainCharacter
   m_TagString: Untagged
@@ -4459,6 +4465,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!114 &3048424156399773238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3069229218642952242}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7607791767df42e44be79232d8119d5c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <CollisionOccurred>k__BackingField: 0
 --- !u!1 &3131318127042214299
 GameObject:
   m_ObjectHideFlags: 0

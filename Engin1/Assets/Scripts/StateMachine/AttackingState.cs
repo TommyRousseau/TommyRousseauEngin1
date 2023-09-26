@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class AttackingState : CharacterState
 {
+	float m_defaultTimeInThisState = 0;
+
 	public override void OnEnter()
 	{
-		Debug.Log("Enter state: Attacking\n");
+		m_stateMachine.Animator.SetTrigger("Attack");
+		m_defaultTimeInThisState = m_stateMachine.AttackTime;
 	}
 
 
@@ -17,22 +20,26 @@ public class AttackingState : CharacterState
 
 	public override void OnFixedUpdate()
 	{
-
+		m_defaultTimeInThisState -= Time.deltaTime;
 	}
 
 
 	public override void OnExit()
 	{
-		Debug.Log("Exit state: Attacking\n");
+	
 	}
 
 	public override bool CanEnter(CharacterState currentState)
 	{
-
-		return Input.GetMouseButtonDown(0);
+		if (currentState is FreeState)
+		{
+			return Input.GetMouseButtonDown(0);
+		}
+		return false;
+		
 	}
 	public override bool CanExit()
 	{
-		return true;
+		return m_defaultTimeInThisState <= 0;
 	}
 }

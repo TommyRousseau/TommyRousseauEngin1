@@ -7,14 +7,14 @@ public class GettingUpState : CharacterState
 	float m_defaultTimeInThisState = 0;
 	public override void OnEnter()
 	{
-		Debug.Log("Enter state: GettingUP\n");
+		m_stateMachine.Animator.SetTrigger("GettingUp");
 		m_defaultTimeInThisState = m_stateMachine.TimeGettingUp;
 	}
 
 
 	public override void OnUpdate()
 	{
-		m_stateMachine.TimeGettingUp -= Time.deltaTime;
+		m_defaultTimeInThisState -= Time.deltaTime;
 	}
 
 	public override void OnFixedUpdate()
@@ -25,16 +25,20 @@ public class GettingUpState : CharacterState
 
 	public override void OnExit()
 	{
-		Debug.Log("Exit state: GettingUP\n");
-		m_stateMachine.TimeGettingUp = m_defaultTimeInThisState;
+		
 	}
 
 	public override bool CanEnter(CharacterState currentState)
 	{
-		return m_stateMachine.TimeOnGround <= 0;
+		if (currentState is OnGroundState)
+		{
+			return true;
+		}
+		return false;
+		
 	}
 	public override bool CanExit()
 	{
-		return m_stateMachine.TimeGettingUp < 0;
+		return m_defaultTimeInThisState < 0;
 	}
 }

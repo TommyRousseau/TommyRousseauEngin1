@@ -8,27 +8,33 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	public Camera Camera { get; private set; }
     [field: SerializeField] public Rigidbody Rb { get; private set; }
     [field: SerializeField] public Animator Animator { get; private set; }
-    
+    [field: SerializeField] public CharacterCollisionDetection HitDetector { get; private set; }
 	[field:SerializeField] public float AccelerationValue { get; private set; }
+	[field:SerializeField] public float AirAccelerationValue { get; private set; }
 	[field:SerializeField] public float StopSpeed { get; private set; }
 	[field: SerializeField] public float ForwardMaxVelocity { get; private set; }
 	[field: SerializeField] public float SideMaxVelocity { get; private set; }
 	[field: SerializeField] public float BackMaxVelocity { get; private set; }
     [field: SerializeField] public float JumpIntensity { get; private set; }
-	[field: SerializeField] public float TimeOnGround { get; set; }
-	[field: SerializeField] public float TimeGettingUp { get; set; }
+	[field: SerializeField] public float TimeOnGround { get; private set; }
+	[field: SerializeField] public float TimeGettingUp { get; private set; }
+	[field: SerializeField] public float HitTime { get; private set; }
+	[field: SerializeField] public float AttackTime { get; private set; }
+	[field: SerializeField] public float MaxJumpFall { get; private set; }
+	public float JumpHeight { get; set; }
+	public bool IsFallStuned { get; set; }
 
-
-
+	[SerializeField] private CharacterFloorTrigger m_floorTrigger;
 	private CharacterState m_currentState;
 	private List<CharacterState> m_possibleStates;
-    [SerializeField] private CharacterFloorTrigger m_floorTrigger;
+   
 
     private void Awake()
 	{
 		m_possibleStates = new List<CharacterState>();
 
 		m_possibleStates.Add(new JumpState());
+		m_possibleStates.Add(new FallingState());
 		m_possibleStates.Add(new HitState());
 		m_possibleStates.Add(new OnGroundState());
 		m_possibleStates.Add(new GettingUpState());
@@ -41,23 +47,17 @@ public class CharacterControllerStateMachine : MonoBehaviour
         }
 
     }
-	// Start is called before the first frame update
+
 	void Start()
     {
         Camera = Camera.main;
-       
-
-       
-
 		m_currentState = m_possibleStates[m_possibleStates.Count-1];
 		m_currentState.OnEnter();
 	}
 
     private void UpdateAnimatorValues()
     {
-
         m_animator.SetBool("TouchGround", IsInContactWithFloor());
-
 	}
  
 
@@ -68,12 +68,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	}
 
     private void Update()
-    {
- 
-	
+    {	
 		UpdateAnimatorValues();
-     
-
         m_currentState.OnUpdate();
         TryStateTransition();
     }
@@ -85,7 +81,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
             return;
         }
 
-        //Je PEUX quitter le state actuel
+        //If I can leave current state
         foreach (var state in m_possibleStates)
         {
             if (m_currentState == state)
@@ -95,10 +91,8 @@ public class CharacterControllerStateMachine : MonoBehaviour
 
             if (state.CanEnter(m_currentState))
             {
-                //Quitter le state actuel
                 m_currentState.OnExit();
                 m_currentState = state;
-                //Rentrer das le state state
                 m_currentState.OnEnter();
                 return;
             }
@@ -109,9 +103,9 @@ public class CharacterControllerStateMachine : MonoBehaviour
     {
         return m_floorTrigger.IsOnFloor;
     }
-}
 
-//TODO
-//Appliquer les déplacement relatif a la cam dans les 3 autre direction
-//Avec des vitesse de déplacement maximale différentes vers les cöté et vers l'arrière
-//Lorsqu'aucun input est mis, décélérer le personnage rapidement
+	public bool IsGettingHit()
+	{
+        return HitDetector.CollisionOccurred;
+	}
+}

@@ -5,22 +5,28 @@ using UnityEngine;
 
 public class FreeState : CharacterState
 {
-	Vector3 vectorOnFloor = new Vector3();
+	private float m_lerpBlendXTimer = 0;
+	private float m_animXBlend = 0;
+	private float m_animXStart = 0;
+	private float m_animXGoal;
 
-	float m_lerpBlendXTimer = 0;
-    float m_animXBlend = 0;
-    float m_animXStart = 0;
-    float m_animXGoal;
-
-    float m_lerpBlendYTimer = 0;	
-	float m_animYBlend;
-    float m_animYStart = 0;
-    float m_animYGoal;
+	private float m_lerpBlendYTimer = 0;
+	private float m_animYBlend;
+	private float m_animYStart = 0;
+	private float m_animYGoal;
 
 
     public override void OnEnter()
 	{
-		Debug.Log("Enter state: FreeState\n");
+        //Check height to compare if the player has fallen from a high place
+        float newHeight;
+        newHeight = m_stateMachine.transform.position.y;
+		if (newHeight <= m_stateMachine.JumpHeight - m_stateMachine.MaxJumpFall)
+        {
+            m_stateMachine.IsFallStuned = true;
+            m_stateMachine.JumpHeight = newHeight;
+
+		}
 	}
 
 
@@ -41,9 +47,6 @@ public class FreeState : CharacterState
             m_stateMachine.m_animator.SetFloat("MoveY", m_animYBlend);
         }
 
-
-        //m_stateMachine.m_animator.SetFloat("MoveY", m_animYBlend);
-
     }
 
 	public override void OnFixedUpdate()
@@ -52,12 +55,9 @@ public class FreeState : CharacterState
 		Vector3 speedVector =Vector3.zero;
 		
 		if (Input.GetKey(KeyCode.W))
-		{
-		
+		{	
 			currentDir += m_stateMachine.Camera.transform.forward;
-
             speedVector.z += 1;
-
         }
 
 		if (Input.GetKey(KeyCode.S))
@@ -71,8 +71,6 @@ public class FreeState : CharacterState
 		{
 			currentDir += m_stateMachine.Camera.transform.right;
             speedVector.x += 1;
-
-
         }
 
 		if (Input.GetKey(KeyCode.A))
@@ -118,11 +116,6 @@ public class FreeState : CharacterState
         }
 
 
-		
-
-
-
-
         currentDir = Vector3.ProjectOnPlane(currentDir, Vector3.up);
         currentDir.Normalize();
 
@@ -139,14 +132,13 @@ public class FreeState : CharacterState
 			m_stateMachine.Rb.AddForce(-m_stateMachine.Rb.velocity * m_stateMachine.StopSpeed);
 
         }
-
-        Debug.Log("CurrentSpeed: " + m_stateMachine.Rb.velocity.magnitude);
+ 
     }
 
 
 	public override void OnExit()
 	{
-        Debug.Log("Exit state: FreeState\n");
+
     }
 
     public override bool CanEnter(CharacterState currentState)
@@ -162,10 +154,22 @@ public class FreeState : CharacterState
             return m_stateMachine.IsInContactWithFloor();
         }
 
-        return false;
-		
-		
+		if (currentState is FallingState)
+		{
+			return m_stateMachine.IsInContactWithFloor();
+		}
 
+		if (currentState is HitState)
+		{
+			return m_stateMachine.IsInContactWithFloor();
+		}
+
+		if (currentState is GettingUpState)
+		{
+			return m_stateMachine.IsInContactWithFloor();
+		}
+
+		return false;
 
     }
     public override bool CanExit()
