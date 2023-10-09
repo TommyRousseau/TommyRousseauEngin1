@@ -11,6 +11,7 @@ public class CharacterCollisionDetection : MonoBehaviour
 		CollisionOccurred = false;
 	}
 
+	/*
 	public virtual void OnCollisionStay(Collision c)
 	{
 		if(c.gameObject.layer == 9)
@@ -19,7 +20,16 @@ public class CharacterCollisionDetection : MonoBehaviour
 		}
 		
 	}
+	*/
 
-	
+	public void OnTriggerStay(Collider other)
+	{
+		if (other.gameObject.layer != 0)
+		{
+			CollisionOccurred = true;
+		}
+	}
+
+
 
 }

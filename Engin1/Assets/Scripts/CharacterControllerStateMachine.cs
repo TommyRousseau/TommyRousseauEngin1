@@ -8,7 +8,7 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	public Camera Camera { get; private set; }
     [field: SerializeField] public Rigidbody Rb { get; private set; }
     [field: SerializeField] public Animator Animator { get; private set; }
-    [field: SerializeField] public CharacterCollisionDetection HitDetector { get; private set; }
+    [field: SerializeField] public TriggerDetection HitDetector { get; private set; }
 	[field:SerializeField] public float AccelerationValue { get; private set; }
 	[field:SerializeField] public float AirAccelerationValue { get; private set; }
 	[field:SerializeField] public float StopSpeed { get; private set; }
