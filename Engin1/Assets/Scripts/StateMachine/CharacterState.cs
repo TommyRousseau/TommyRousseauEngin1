@@ -32,9 +32,14 @@ public abstract class CharacterState : IState
 		return true;
     }
 
-    public virtual void OnStart(StateMachine stateMachine)
+    public void OnStart()
     {
-		m_stateMachine = stateMachine;
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void OnStart(CharacterControllerStateMachine stateMachineRef)
+    {
+		m_stateMachine = stateMachineRef;
     }
 
     public virtual bool CanEnter(IState currentState)

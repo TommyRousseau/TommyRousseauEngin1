@@ -44,14 +44,15 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>
 
     protected override void Start()
     {
-        //base.Start();
+   
         foreach (CharacterState state in m_possibleStates)
         {
-            state.OnStart();
+            state.OnStart(this);
         }
         Camera = Camera.main;
-        
-	}
+        m_currentState = m_possibleStates[m_possibleStates.Count - 1];
+        m_currentState.OnEnter();
+    }
 
     private void UpdateAnimatorValues()
     {
