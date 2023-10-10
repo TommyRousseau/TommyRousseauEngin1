@@ -29,7 +29,7 @@ public class AttackingState : CharacterState
 	
 	}
 
-	public override bool CanEnter(CharacterState currentState)
+	public override bool CanEnter(IState currentState)
 	{
 		if (currentState is FreeState)
 		{

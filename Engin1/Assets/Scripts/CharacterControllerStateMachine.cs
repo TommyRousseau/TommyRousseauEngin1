@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterControllerStateMachine : MonoBehaviour
+public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>
 {
 	[SerializeField] public Animator m_animator;
 	public Camera Camera { get; private set; }
@@ -25,34 +25,32 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	public bool IsFallStuned { get; set; }
 
 	[SerializeField] private CharacterFloorTrigger m_floorTrigger;
-	private CharacterState m_currentState;
-	private List<CharacterState> m_possibleStates;
-   
+	
 
-    private void Awake()
-	{
-		m_possibleStates = new List<CharacterState>();
+    protected override void CreatePossibleStates()
+    {
+        m_possibleStates = new List<CharacterState>();
 
-		m_possibleStates.Add(new JumpState());
-		m_possibleStates.Add(new FallingState());
-		m_possibleStates.Add(new HitState());
-		m_possibleStates.Add(new OnGroundState());
-		m_possibleStates.Add(new GettingUpState());
-		m_possibleStates.Add(new AttackingState());
-		m_possibleStates.Add(new FreeState());
+        m_possibleStates.Add(new JumpState());
+        m_possibleStates.Add(new FallingState());
+        m_possibleStates.Add(new HitState());
+        m_possibleStates.Add(new OnGroundState());
+        m_possibleStates.Add(new GettingUpState());
+        m_possibleStates.Add(new AttackingState());
+        m_possibleStates.Add(new FreeState());
 
-		foreach (CharacterState state in m_possibleStates)
-        {
-            state.OnStart(this);
-        }
-
+       
     }
 
-	void Start()
+    protected override void Start()
     {
+        //base.Start();
+        foreach (CharacterState state in m_possibleStates)
+        {
+            state.OnStart();
+        }
         Camera = Camera.main;
-		m_currentState = m_possibleStates[m_possibleStates.Count-1];
-		m_currentState.OnEnter();
+        
 	}
 
     private void UpdateAnimatorValues()
@@ -61,42 +59,15 @@ public class CharacterControllerStateMachine : MonoBehaviour
 	}
  
 
-    private void FixedUpdate()
+    protected override void FixedUpdate()
     {
-		m_currentState.OnFixedUpdate();
+		base.FixedUpdate();
         
 	}
 
-    private void Update()
+    protected override void Update()
     {	
-		UpdateAnimatorValues();
-        m_currentState.OnUpdate();
-        TryStateTransition();
-    }
-
-	private void TryStateTransition()
-	{
-        if (!m_currentState.CanExit())
-        {
-            return;
-        }
-
-        //If I can leave current state
-        foreach (var state in m_possibleStates)
-        {
-            if (m_currentState == state)
-            {
-                continue;
-            }
-
-            if (state.CanEnter(m_currentState))
-            {
-                m_currentState.OnExit();
-                m_currentState = state;
-                m_currentState.OnEnter();
-                return;
-            }
-        }
+        UpdateAnimatorValues();
     }
 
     public bool IsInContactWithFloor()

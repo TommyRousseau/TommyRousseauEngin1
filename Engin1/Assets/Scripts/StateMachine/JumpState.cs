@@ -34,7 +34,7 @@ public class JumpState : CharacterState
       
     }
 
-    public override bool CanEnter(CharacterState currentState)
+    public override bool CanEnter(IState currentState)
     {
 
         if( Input.GetKey(KeyCode.Space))

@@ -27,13 +27,13 @@ public class GameManager : MonoBehaviour
 	{
 		s_instance = this;
 
-		m_possibleStates = new List<CharacterState>();
+		m_possibleStates = new List<GameState>();
 
-		m_possibleStates.Add(new GameplayState());
-		m_possibleStates.Add(new CinematicState());
-		m_possibleStates.Add(new SceneTransitionState());
+		//m_possibleStates.Add(new GameplayState());
+		//m_possibleStates.Add(new CinematicState());
+		//m_possibleStates.Add(new SceneTransitionState());
 
-		foreach (CharacterState state in m_possibleStates)
+		foreach (GameState state in m_possibleStates)
 		{
 			state.OnStart(this);
 		}

@@ -12,7 +12,12 @@ public class GameState : IState
 		m_stateMachine = stateMachine;
 	}
 
-	public virtual void OnEnter()
+    public virtual void OnStart()
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public virtual void OnEnter()
 	{
 		
 	}
@@ -32,7 +37,7 @@ public class GameState : IState
 
 	}
 
-	public virtual bool CanEnter(CharacterState currentState)
+	public virtual bool CanEnter(IState currentState)
 	{
 		return true;
 	}
@@ -41,4 +46,6 @@ public class GameState : IState
 	{
 		return true;
 	}
+
+  
 }

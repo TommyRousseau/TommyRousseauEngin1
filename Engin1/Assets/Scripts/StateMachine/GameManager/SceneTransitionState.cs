@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CinematicState : CharacterState
+public class SceneTransitionState : GameState
 {
 	float m_defaultTimeInThisState = 0;
 	public override void OnEnter()
@@ -28,7 +28,7 @@ public class CinematicState : CharacterState
 		
 	}
 
-	public override bool CanEnter(CharacterState currentState)
+	public override bool CanEnter(IState currentState)
 	{
 		return true;
 
