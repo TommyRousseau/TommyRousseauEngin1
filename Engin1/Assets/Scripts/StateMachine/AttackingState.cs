@@ -26,8 +26,9 @@ public class AttackingState : CharacterState
 
 	public override void OnExit()
 	{
-	
-	}
+        m_stateMachine.ToggleAttackHitbox(false);
+
+    }
 
 	public override bool CanEnter(IState currentState)
 	{

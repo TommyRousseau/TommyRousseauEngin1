@@ -13,12 +13,12 @@ public class CinematicState : IState
 
     bool IState.CanEnter(IState currentState)
     {
-        return false;
+        return Input.GetKeyDown(KeyCode.G);
     }
 
     bool IState.CanExit()
     {
-        return false;
+        return Input.GetKeyDown(KeyCode.G);
     }
 
     void IState.OnEnter()

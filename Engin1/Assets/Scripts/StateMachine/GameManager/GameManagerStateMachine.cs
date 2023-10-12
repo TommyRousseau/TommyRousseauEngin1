@@ -10,7 +10,8 @@ public class GameManagerStateMachine : BaseStateMachine<IState>
     protected override void CreatePossibleStates()
     {
         m_possibleStates = new List<IState>();
-        m_possibleStates.Add(new GameplayState(m_gameplayCamera));
         m_possibleStates.Add(new CinematicState(m_cinematicCamera));
+        m_possibleStates.Add(new GameplayState(m_gameplayCamera));
+        
     }
 }

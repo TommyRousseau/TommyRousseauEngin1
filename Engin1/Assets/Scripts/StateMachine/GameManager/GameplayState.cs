@@ -17,6 +17,7 @@ public class GameplayState : IState
 
     bool IState.CanExit()
     {
+       
         return Input.GetKeyDown(KeyCode.G);
     }
 
