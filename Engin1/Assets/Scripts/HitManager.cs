@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
+using static VfxManager;
 
 public class HitManager : MonoBehaviour
 {
@@ -36,16 +37,19 @@ public class HitManager : MonoBehaviour
     {
         var otherHitBox = other.GetComponent<HitManager>();
         if(otherHitBox == null) { return; }
+        print("TEst");
 
         if (CanHitOther(otherHitBox))
         {
+       
+            VfxManager._Instance.InstantiateVFX(EVFX_Type.Hit, other.ClosestPoint(transform.position));
             otherHitBox.GetHit(this.transform.name);
         }
     }
 
     private bool CanHitOther(HitManager other)
     {
-        print("11");
+        print("11" + this.transform.name);
         if(m_canHit && other.m_canGetHit)
         {
             print("22:" + m_affectedAgentType.Contains(other.m_agentType));

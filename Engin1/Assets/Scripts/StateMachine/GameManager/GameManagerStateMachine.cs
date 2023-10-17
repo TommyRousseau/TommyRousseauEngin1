@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManagerStateMachine : BaseStateMachine<IState>
 {
@@ -13,5 +14,15 @@ public class GameManagerStateMachine : BaseStateMachine<IState>
         m_possibleStates.Add(new CinematicState(m_cinematicCamera));
         m_possibleStates.Add(new GameplayState(m_gameplayCamera));
         
+    }
+
+    protected override void Update()
+    {
+        base.Update();
+        if(Input.GetKeyDown(KeyCode.N))
+        {
+            //Cheat pour changer de scene
+            SceneManager.LoadScene("Test", LoadSceneMode.Additive);
+        }
     }
 }
