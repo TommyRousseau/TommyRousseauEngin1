@@ -10,6 +10,7 @@ public class JumpState : CharacterState
 
 	public override void OnEnter()
     {
+        m_stateMachine.AudioController.PlaySound(ESoundType.Jump);
 
 		m_stateMachine.Animator.SetTrigger("Jump");
 		m_currentStateTimer = STATE_EXIT_TIMER;

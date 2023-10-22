@@ -26,9 +26,16 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>
 	public bool IsFallStuned { get; set; }
 
 	[SerializeField] private CharacterFloorTrigger m_floorTrigger;
-	
 
-    protected override void CreatePossibleStates()
+	[field: SerializeField] public CharacterAudioController AudioController { get; private set; }
+
+
+	private void Awake()
+	{
+        base.Awake();
+   
+	}
+	protected override void CreatePossibleStates()
     {
         m_possibleStates = new List<CharacterState>();
 
@@ -88,5 +95,4 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>
     {
         AttackHitbox.SetActive(isActive);
     }
-    
 }
