@@ -6,55 +6,62 @@ using static VfxManager;
 
 public class HitManager : MonoBehaviour
 {
+    [SerializeField] private CharacterControllerStateMachine m_controllerSM;
     [SerializeField] private bool m_canHit;
     [SerializeField] private bool m_canGetHit;
-    [SerializeField] protected EAgentType m_agentType = EAgentType.Count;
+	[SerializeField] private GameObject m_prefabAudioSource;
+	[SerializeField] protected EAgentType m_agentType = EAgentType.Count;
 
     [SerializeField] protected List<EAgentType> m_affectedAgentType = new List<EAgentType>();
-    public enum EAgentType
+    [SerializeField] private AudioClip m_punchAudioClip;
+
+
+
+	public enum EAgentType
     {
         Ally,
         Enemy,
         Neutral,
         Count
     }
-
-    public bool IsGettingHit
-    {
-        get {bool temp = m_isGettingHit; m_isGettingHit = false; return m_isGettingHit;  }
-        set { m_isGettingHit = value; }
-    }
-    private bool m_isGettingHit;
+	
 
     
     public void GetHit(string hitter)
     {
         Debug.Log(this.transform.name + " just got hit by: " + hitter);
-        IsGettingHit = true;
+        if (m_controllerSM != null)
+        {
+			m_controllerSM.IsGettingHit = true;
+		}
+		
     }
 
     private void OnTriggerEnter(Collider other)
     {
         var otherHitBox = other.GetComponent<HitManager>();
         if(otherHitBox == null) { return; }
-        print("TEst");
 
         if (CanHitOther(otherHitBox))
-        {
-       
+        {     
             VfxManager._Instance.InstantiateVFX(EVFX_Type.Hit, other.ClosestPoint(transform.position));
-            otherHitBox.GetHit(this.transform.name);
+            
+            //Audio
+            GameObject tempAudioSource = Instantiate(m_prefabAudioSource, other.ClosestPoint(transform.position), Quaternion.identity);
+            tempAudioSource.GetComponent<AudioSource>().PlayOneShot(m_punchAudioClip);
+
+			otherHitBox.GetHit(this.transform.name);
         }
     }
 
-    private bool CanHitOther(HitManager other)
-    {
-        print("11" + this.transform.name);
-        if(m_canHit && other.m_canGetHit)
-        {
-            print("22:" + m_affectedAgentType.Contains(other.m_agentType));
-            return m_affectedAgentType.Contains(other.m_agentType);
-        }
-        return false;
-    }
+
+
+	private bool CanHitOther(HitManager other)
+	{
+		if (m_canHit && other.m_canGetHit)
+		{
+			return m_affectedAgentType.Contains(other.m_agentType);
+		}
+		return false;
+	}
 }

@@ -7,9 +7,12 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>
 	[SerializeField] public Animator m_animator;
 	public Camera Camera { get; private set; }
     [field: SerializeField] public Rigidbody Rb { get; private set; }
-    [field: SerializeField] public Animator Animator { get; private set; }   
-    [field: SerializeField] public HitManager HitDetector { get; private set; }
-    [field: SerializeField] public GameObject AttackHitbox { get; private set; }
+    [field: SerializeField] public Animator Animator { get; private set; }
+
+	//[field: SerializeField] public HitManager HitDetector { get; private set; }
+
+	[field: SerializeField] public bool IsGettingHit { get; set; }
+	[field: SerializeField] public GameObject AttackHitbox { get; private set; }
 	[field:SerializeField] public float AccelerationValue { get; private set; }
 	[field:SerializeField] public float AirAccelerationValue { get; private set; }
 	[field:SerializeField] public float StopSpeed { get; private set; }
@@ -85,12 +88,7 @@ public class CharacterControllerStateMachine : BaseStateMachine<CharacterState>
         return m_floorTrigger.IsOnFloor;
     }
 
-    
-	public bool IsGettingHit()
-	{
-        return HitDetector.IsGettingHit;
-	}
-
+   
     public void ToggleAttackHitbox(bool isActive)
     {
         AttackHitbox.SetActive(isActive);

@@ -93,7 +93,7 @@ public class FallingState : CharacterState
 
 	public override void OnExit()
 	{
-
+		m_stateMachine.AudioController.PlaySound(EActionType.Landing);
 	}
 
 	public override bool CanEnter(IState currentState)

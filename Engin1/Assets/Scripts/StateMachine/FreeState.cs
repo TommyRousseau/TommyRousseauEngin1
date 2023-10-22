@@ -15,6 +15,8 @@ public class FreeState : CharacterState
 	private float m_animYStart = 0;
 	private float m_animYGoal;
 
+    private float m_walkTimerSfx = 0;
+
 
     public override void OnEnter()
 	{
@@ -132,8 +134,17 @@ public class FreeState : CharacterState
 			m_stateMachine.Rb.AddForce(-m_stateMachine.Rb.velocity * m_stateMachine.StopSpeed);
 
         }
- 
-    }
+        if(m_stateMachine.Rb.velocity.magnitude != 0)
+        {
+            m_walkTimerSfx += Time.deltaTime * m_stateMachine.Rb.velocity.magnitude;
+
+            if(m_walkTimerSfx > 5)
+            {
+				m_stateMachine.AudioController.PlaySound(EActionType.Walk);
+                m_walkTimerSfx = 0;
+			}
+		}
+	}
 
 
 	public override void OnExit()
